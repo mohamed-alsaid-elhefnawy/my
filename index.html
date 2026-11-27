@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introduction to Quantum Mechanics | Interactive University Platform</title>
+  
+  <!-- Meta Information -->
+  <meta name="description" content="An immersive, interactive quantum mechanics university learning platform featuring 3D hydrogen orbitals, wave-particle duality, and the Schrödinger equation. Project by Mohamed Alsaid Elhefnawy (ID: 225114279) supervised by Dr. Hamdi M. Abdelhamid.">
+  <meta name="theme-color" content="#060B18">
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for Scientific Mathematical Notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js & OrbitControls for 3D Scientific Visualizations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Hydrogen Explorer Stylesheet -->
+  <link rel="stylesheet" href="hydrogen-explorer.css">
+</head>
+<body>
+
+  <!-- AMBIENT FLOATING QUANTUM PARTICLES CANVAS BACKGROUND -->
+  <canvas id="quantum-bg-canvas" class="ambient-bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- TOP NAVIGATION BAR (Floating Quantum Island) -->
+  <header class="navbar-container" id="site-navbar">
+    <div class="navbar-inner">
+      <!-- University Brand with Quantum Orbit -->
+      <a href="#home" class="nav-brand">
+        <div class="brand-orb">
+          <i data-lucide="atom"></i>
+          <span class="brand-orb-ring"></span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">QUANTUM<span class="brand-highlight">.EDU</span></span>
+          <div class="brand-meta-badge">
+            <span class="badge-live-dot"></span>
+            <span class="brand-sub">Physics Dept. &bull; PHY-2026</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu (Floating Pill Dock) -->
+      <nav class="desktop-nav" aria-label="Course Navigation">
+        <div class="nav-pill-dock">
+          <ul class="nav-links">
+            <li>
+              <a href="#home" class="nav-link active" data-nav="home">
+                <i data-lucide="sparkles"></i>
+                <span>Home</span>
+              </a>
+            </li>
+            <li>
+              <a href="#introduction" class="nav-link" data-nav="introduction">
+                <i data-lucide="compass"></i>
+                <span>Introduction</span>
+              </a>
+            </li>
+            <li>
+              <a href="#hydrogen-explorer" class="nav-link" data-nav="hydrogen-explorer">
+                <i data-lucide="atom"></i>
+                <span>Hydrogen Explorer</span>
+              </a>
+            </li>
+            <li>
+              <a href="#quantum-concepts" class="nav-link" data-nav="quantum-concepts">
+                <i data-lucide="layers"></i>
+                <span>Quantum Concepts</span>
+              </a>
+            </li>
+            <li>
+              <a href="#experiments" class="nav-link" data-nav="experiments">
+                <i data-lucide="waves"></i>
+                <span>Experiments</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Navigation Action Controls (Mobile / Tablet) -->
+      <div class="nav-actions">
+        <!-- Animated Hamburger Button -->
+        <button id="btn-mobile-toggle" class="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE NAVIGATION DRAWER & BACKDROP -->
+  <div id="mobile-drawer-backdrop" class="drawer-backdrop"></div>
+  <div id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-top">
+      <div class="brand-text">
+        <span class="brand-title">QUANTUM<span class="brand-highlight">.EDU</span></span>
+        <div class="brand-meta-badge">
+          <span class="badge-live-dot"></span>
+          <span class="brand-sub">Physics Dept. &bull; PHY-2026</span>
+        </div>
+      </div>
+      <button id="btn-mobile-close" class="btn-icon" aria-label="Close menu">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <ul class="mobile-links">
+      <li>
+        <a href="#home" class="mobile-link active" data-nav="home">
+          <i data-lucide="sparkles"></i>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="#introduction" class="mobile-link" data-nav="introduction">
+          <i data-lucide="compass"></i>
+          <span>Introduction</span>
+        </a>
+      </li>
+      <li>
+        <a href="#hydrogen-explorer" class="mobile-link" data-nav="hydrogen-explorer">
+          <i data-lucide="atom"></i>
+          <span>Hydrogen Explorer</span>
+        </a>
+      </li>
+      <li>
+        <a href="#quantum-concepts" class="mobile-link" data-nav="quantum-concepts">
+          <i data-lucide="layers"></i>
+          <span>Quantum Concepts</span>
+        </a>
+      </li>
+      <li>
+        <a href="#experiments" class="mobile-link" data-nav="experiments">
+          <i data-lucide="waves"></i>
+          <span>Experiments</span>
+        </a>
+      </li>
+    </ul>
+    <div class="mobile-drawer-bottom">
+      <div class="drawer-credit">
+        <i data-lucide="user-check"></i>
+        <div>
+          <strong>Mohamed Alsaid Elhefnawy</strong>
+          <span>ID: 225114279 &bull; Dr. Hamdi M. Abdelhamid</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEARCH MODAL OVERLAY -->
+  <div id="search-modal" class="modal-overlay">
+    <div class="search-modal-box">
+      <div class="search-input-header">
+        <i data-lucide="search" class="search-modal-icon"></i>
+        <input type="text" id="global-search-input" placeholder="Search quantum concepts, formulas, orbitals, experiments..." autocomplete="off">
+        <button id="btn-clear-search" class="btn-clear" aria-label="Clear Search"><i data-lucide="x"></i></button>
+      </div>
+      <div class="search-results-list" id="search-results-container"></div>
+      <div class="search-modal-footer">
+        <span>Use <kbd>&uarr;</kbd> <kbd>&darr;</kbd> to navigate</span>
+        <span>Press <kbd>ESC</kbd> to close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLLABLE CONTENT -->
+  <main>
+
+    <!-- =====================================================================
+         SECTION 1: HOME (Stunning Animated Hero with 3D Atom)
+         ===================================================================== -->
+    <section id="home" class="hero-section">
+      <div class="hero-layout">
+        <!-- Hero Text & Academic Header -->
+        <div class="hero-content">
+          <div class="academic-badge">
+            <span class="badge-pulse"></span>
+            <span>Faculty of Science &bull; Department of Physics &bull; PHY-301</span>
+          </div>
+
+          <h1 class="hero-title">
+            Introduction to <br>
+            <span class="gradient-cyan-text">Quantum Mechanics</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            An immersive academic journey into wave-particle duality, probabilistic state vectors, 
+            3D hydrogen orbitals, and the fundamental wave equation of subatomic reality.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="hero-buttons">
+            <a href="#atomic-structure" class="btn-primary-glow">
+              <i data-lucide="atom"></i>
+              <span>Explore 3D Atom</span>
+            </a>
+            <a href="#basics" class="btn-secondary-glow">
+              <i data-lucide="compass"></i>
+              <span>Quantum Basics</span>
+            </a>
+            <a href="#duality" class="btn-ghost">
+              <i data-lucide="waves"></i>
+              <span>Double-Slit Sim</span>
+            </a>
+          </div>
+
+          <!-- Academic Dossier Card -->
+          <div class="hero-dossier-card">
+            <div class="dossier-top">
+              <div class="dossier-title-wrap">
+                <span class="dossier-kicker">Undergraduate Academic Project</span>
+                <h2 class="dossier-main-title">Coursework Submission Record</h2>
+              </div>
+              <div class="dossier-verified-seal" title="Officially Accredited Physics Submission">
+                <i data-lucide="shield-check"></i>
+              </div>
+            </div>
+
+            <div class="dossier-grid">
+              <div class="dossier-item">
+                <span class="item-label"><i data-lucide="user"></i> Student Researcher</span>
+                <span class="item-val highlight-cyan">Mohamed Alsaid Elhefnawy</span>
+              </div>
+              <div class="dossier-item">
+                <span class="item-label"><i data-lucide="hash"></i> University ID</span>
+                <span class="item-val font-mono id-chip">225114279</span>
+              </div>
+              <div class="dossier-item full-width">
+                <span class="item-label"><i data-lucide="graduation-cap"></i> Course Supervisor & Instructor</span>
+                <div class="instructor-line">
+                  <span class="item-val instructor-name">Dr. Hamdi M. Abdelhamid</span>
+                  <span class="dept-tag">Department of Physics</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Interactive Quantum Hydrogen Atom Viewport in Hero -->
+        <div class="hero-visual">
+          <div class="threejs-card">
+            <div class="viewport-hud-top">
+              <div class="hud-tag">
+                <span class="hud-live-dot"></span>
+                <span id="hud-orbital-name">Hydrogen Atom: 1s Ground State</span>
+              </div>
+              <button id="btn-recenter-cam" class="hud-btn-pill" title="Reset 3D Camera">
+                <i data-lucide="rotate-ccw"></i>
+                <span>Recenter</span>
+              </button>
+            </div>
+
+            <!-- Canvas for Three.js -->
+            <div class="atom-canvas-wrap" id="atom-canvas-container">
+              <canvas id="quantum-atom-canvas"></canvas>
+            </div>
+
+            <!-- Interactive HUD Orbital Controls -->
+            <div class="viewport-hud-bottom">
+              <div class="hud-controls-row">
+                <span class="hud-label">Orbital Mode:</span>
+                <div class="orbital-pills-wrap">
+                  <button class="orbital-pill active" data-orbital-select="1s">1s (Ground)</button>
+                  <button class="orbital-pill" data-orbital-select="2s">2s (Spherical Shell)</button>
+                  <button class="orbital-pill" data-orbital-select="2pz">2p_z (Dumbbell Lobe)</button>
+                  <button class="orbital-pill" data-orbital-select="2px">2p_x (Lobed)</button>
+                  <button class="orbital-pill" data-orbital-select="3dz2">3d_z² (Torus)</button>
+                </div>
+              </div>
+
+              <div class="hud-metrics-strip">
+                <div class="metric-block">
+                  <span class="m-label">Principal (n)</span>
+                  <span class="m-val" id="metric-n">1</span>
+                </div>
+                <div class="metric-block">
+                  <span class="m-label">Azimuthal (l)</span>
+                  <span class="m-val" id="metric-l">0 (s)</span>
+                </div>
+                <div class="metric-block">
+                  <span class="m-label">Eigen-Energy</span>
+                  <span class="m-val highlight" id="metric-energy">-13.60 eV</span>
+                </div>
+                <div class="metric-block">
+                  <span class="m-label">Angular (L)</span>
+                  <span class="m-val" id="metric-l-val">0.00 ℏ</span>
+                </div>
+              </div>
+
+              <p class="orbital-hud-desc" id="orbital-desc-text">
+                Spherically symmetric ground state with zero orbital angular momentum (\(l = 0\)). Maximum probability density \(|\psi|^2\) surrounds the glowing nucleus.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 2: QUANTUM BASICS (Short explanations + scientific illustrations)
+         ===================================================================== -->
+    <div id="introduction" class="nav-target-anchor"></div>
+    <section id="basics" class="content-section">
+      <div class="section-container">
+        <div class="section-header-centered">
+          <span class="section-tag"><i data-lucide="compass"></i> Scientific Foundations</span>
+          <h2 class="section-title">Quantum <span class="gradient-cyan-text">Basics</span></h2>
+          <p class="section-subtitle">
+            Core principles of subatomic physics where continuous Newtonian mechanics yields to discrete probability waves.
+          </p>
+        </div>
+
+        <!-- 4 Core Pillars Grid -->
+        <div class="grid-4-cards">
+          <!-- Pillar 1: Energy Quantization -->
+          <div class="quantum-card">
+            <div class="card-icon-orb cyan">
+              <i data-lucide="layers"></i>
+            </div>
+            <span class="card-index-tag">Pillar 01</span>
+            <h3 class="card-heading">Energy Quantization</h3>
+            <p class="card-desc">
+              Energy is not continuous. In 1900, Max Planck discovered that atomic oscillators exchange energy in discrete packets called <em>quanta</em>, directly proportional to frequency.
+            </p>
+            <div class="math-box">
+              $$E = h\nu = \hbar\omega$$
+            </div>
+            <div class="card-footer-caption">
+              \(h = 6.626 \times 10^{-34}\ \text{J}\cdot\text{s}\) (Planck's Constant)
+            </div>
+          </div>
+
+          <!-- Pillar 2: Wave-Particle Duality -->
+          <div class="quantum-card">
+            <div class="card-icon-orb blue">
+              <i data-lucide="waves"></i>
+            </div>
+            <span class="card-index-tag">Pillar 02</span>
+            <h3 class="card-heading">Wave-Particle Duality</h3>
+            <p class="card-desc">
+              Subatomic entities propagate through space as extended phase waves, yet register as localized discrete particles upon measurement. Louis de Broglie showed every moving mass possesses a wavelength.
+            </p>
+            <div class="math-box">
+              $$\lambda = \frac{h}{p} = \frac{h}{mv}$$
+            </div>
+            <div class="card-footer-caption">
+              Validated by Davisson-Germer electron diffraction
+            </div>
+          </div>
+
+          <!-- Pillar 3: Probabilistic State & Born Rule -->
+          <div class="quantum-card">
+            <div class="card-icon-orb indigo">
+              <i data-lucide="target"></i>
+            </div>
+            <span class="card-index-tag">Pillar 03</span>
+            <h3 class="card-heading">Born Probability Rule</h3>
+            <p class="card-desc">
+              The wavefunction \(\Psi(\vec{r}, t)\) is not an electric charge density, but a complex probability amplitude. Max Born proved that observable probability equals the squared absolute magnitude.
+            </p>
+            <div class="math-box">
+              $$P(\vec{r}) = |\Psi(\vec{r}, t)|^2$$
+            </div>
+            <div class="card-footer-caption">
+              Normalization: \(\int |\Psi|^2 dV = 1\) (Certainty)
+            </div>
+          </div>
+
+          <!-- Pillar 4: Linear Superposition -->
+          <div class="quantum-card">
+            <div class="card-icon-orb violet">
+              <i data-lucide="git-merge"></i>
+            </div>
+            <span class="card-index-tag">Pillar 04</span>
+            <h3 class="card-heading">Quantum Superposition</h3>
+            <p class="card-desc">
+              Prior to measurement, a quantum system occupies a linear combination of all its basis states simultaneously. Measurement collapses the state vector into a single definite eigenstate.
+            </p>
+            <div class="math-box">
+              $$|\psi\rangle = \alpha |0\rangle + \beta |1\rangle$$
+            </div>
+            <div class="card-footer-caption">
+              Constraint: \(|\alpha|^2 + |\beta|^2 = 1\) (Bloch Sphere)
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Planck Photon Energy Solver -->
+        <div class="interactive-tool-card">
+          <div class="tool-card-header">
+            <div>
+              <span class="tool-kicker">Interactive Scientific Solver</span>
+              <h3 class="tool-heading">Planck-Einstein Photon Energy Calculator</h3>
+              <p class="tool-sub">Compute photon energy in electron-volts and Joules across the electromagnetic spectrum.</p>
+            </div>
+            <div class="tool-equation-badge">
+              $$E = h\cdot f = \frac{hc}{\lambda}$$
+            </div>
+          </div>
+
+          <div class="tool-calculator-grid">
+            <div class="input-col">
+              <label for="calc-freq-val" class="field-label">Frequency Value (\(f\)):</label>
+              <div class="input-select-pair">
+                <input type="number" id="calc-freq-val" value="5.5" step="0.1" min="0.1" class="sci-input">
+                <select id="calc-freq-band" class="sci-select">
+                  <option value="1e14" selected>&times; 10¹⁴ Hz (Visible Green Light ~545 nm)</option>
+                  <option value="1e15">&times; 10¹⁵ Hz (Ultraviolet Radiation)</option>
+                  <option value="1e9">&times; 10⁹ Hz (Microwave Telecommunication)</option>
+                  <option value="1e18">&times; 10¹⁸ Hz (Hard X-Ray Radiation)</option>
+                </select>
+              </div>
+              <span class="field-hint">Adjust the frequency to observe corresponding photon energy and optical spectrum.</span>
+            </div>
+
+            <div class="output-col">
+              <span class="output-kicker">Calculated Photon Energy:</span>
+              <div class="output-main-val" id="calc-result-ev">2.275 eV</div>
+              <div class="output-sub-val" id="calc-result-j">3.645 &times; 10⁻¹⁹ Joules</div>
+              <div class="output-tag" id="calc-result-spectrum">Optical Visible Light (Green)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 3: HYDROGEN ATOM EXPLORER (Advanced Interactive Quantum Simulation)
+         ===================================================================== -->
+    <div id="atomic-structure" class="nav-target-anchor"></div>
+    <section id="hydrogen-explorer" class="content-section alternate-bg">
+      <div class="section-container">
+        <!-- Section Header -->
+        <div class="section-header-centered">
+          <span class="section-tag"><i data-lucide="atom"></i> Advanced Interactive Simulation</span>
+          <h2 class="section-title">Hydrogen Atom <span class="gradient-cyan-text">Explorer</span></h2>
+          <p class="section-subtitle">
+            An immersive scientific laboratory: explore 3D electron probability density clouds \(|\psi|^2\), real-time 2D wavefunction slice heatmaps, quantized orbital state galleries, and Bohr energy transitions.
+          </p>
+        </div>
+
+        <!-- Main Visualizer Workbench -->
+        <div class="h-explorer-stage">
+          <!-- Left: Viewport Stage Card -->
+          <div class="h-viewport-card">
+            <!-- Viewport Toolbar / HUD -->
+            <div class="h-viewport-toolbar">
+              <div class="h-mode-tabs">
+                <button class="h-mode-btn active" data-h-view="3d">
+                  <i data-lucide="orbit"></i>
+                  <span>3D Probability Cloud</span>
+                </button>
+                <button class="h-mode-btn" data-h-view="2d">
+                  <i data-lucide="layers"></i>
+                  <span>2D Density Slice</span>
+                </button>
+                <button class="h-mode-btn" data-h-view="bohr">
+                  <i data-lucide="circle-dot"></i>
+                  <span>Bohr Model</span>
+                </button>
+              </div>
+
+              <!-- 2D Slice Plane Selector (hidden by default, shown in 2D mode) -->
+              <div class="h-plane-selector" id="h-plane-selector" style="display: none;">
+                <span class="h-bar-label">Slice Plane:</span>
+                <div class="h-plane-btns">
+                  <button class="h-plane-btn active" data-h-plane="xz">XZ (y=0)</button>
+                  <button class="h-plane-btn" data-h-plane="yz">YZ (x=0)</button>
+                  <button class="h-plane-btn" data-h-plane="xy">XY (z=0)</button>
+                </div>
+              </div>
+
+              <!-- Action Controls -->
+              <div class="h-action-btns">
+                <button id="btn-h-toggle-nucleus" class="h-tool-btn active" title="Toggle Proton Nucleus">
+                  <i data-lucide="sun"></i>
+                  <span>Nucleus</span>
+                </button>
+                <button id="btn-h-toggle-axes" class="h-tool-btn active" title="Toggle XYZ Spatial Axes">
+                  <i data-lucide="axis-3d"></i>
+                  <span>Axes</span>
+                </button>
+                <button id="btn-h-toggle-nodes" class="h-tool-btn" title="Toggle Nodal Surfaces">
+                  <i data-lucide="shield"></i>
+                  <span>Nodes</span>
+                </button>
+                <button id="btn-h-cam-reset" class="h-tool-btn" title="Reset Camera View">
+                  <i data-lucide="rotate-ccw"></i>
+                </button>
+                <button id="btn-h-fullscreen" class="h-tool-btn" title="Toggle Fullscreen">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Canvas Viewport Box -->
+            <div class="h-canvas-wrapper" id="h-canvas-container">
+              <!-- Three.js 3D Canvas -->
+              <canvas id="canvas-hydrogen-3d"></canvas>
+              <!-- 2D Cross-section Canvas -->
+              <canvas id="canvas-hydrogen-2d" style="display: none;"></canvas>
+              <!-- Bohr Model Canvas -->
+              <canvas id="canvas-hydrogen-bohr" style="display: none;"></canvas>
+
+              <!-- State Floating HUD Pill -->
+              <div class="h-hud-chip" id="h-hud-chip">
+                <span class="h-chip-state font-mono" id="h-hud-state">(n, l, m) = (3, 2, 1)</span>
+                <span class="h-chip-sub" id="h-hud-name">3d Orbital (m = 1)</span>
+              </div>
+
+              <!-- 3D Navigation Guide Overlay -->
+              <div class="h-nav-hint" id="h-nav-hint">
+                <i data-lucide="move-3d"></i>
+                <span>Left click + drag to rotate • Wheel to zoom • Right click to pan</span>
+              </div>
+            </div>
+
+            <!-- Scientific Colormap Scale Bar (Purple -> Orange -> Yellow-White) -->
+            <div class="h-colormap-bar">
+              <span class="h-colormap-title">Probability Density \(|\psi|^2\) Scale:</span>
+              <div class="h-color-gradient-track" id="h-colormap-gradient"></div>
+              <div class="h-colormap-ticks">
+                <span>0 (Nodal Null)</span>
+                <span>Low (Purple)</span>
+                <span>Medium (Orange)</span>
+                <span>Peak \(|\psi|^2\) (Yellow-White)</span>
+              </div>
+            </div>
+
+            <!-- Transition / Orbital Readout Banner -->
+            <div class="h-transition-banner" id="h-transition-banner">
+              <strong>Ground/Excited Quantum State:</strong> Orbiting in \(3d\) subshell (\(n=3, l=2, m=1\)). The electron cloud exhibits zero radial nodes and two planar angular nodal surfaces passing through the nucleus.
+            </div>
+          </div>
+
+          <!-- Right: Quantum Controls & Mathematical Inspector Panel -->
+          <div class="h-controls-panel">
+            <!-- 1. Quantum Numbers Selection Card -->
+            <div class="h-card">
+              <div class="h-card-header">
+                <i data-lucide="sliders" class="icon-cyan"></i>
+                <h3 class="h-card-title">Real-Time Quantum Numbers</h3>
+              </div>
+              <p class="h-card-desc">
+                Select discrete quantum numbers. Azimuthal \(l\) and magnetic \(m\) options update dynamically to remain physically valid.
+              </p>
+
+              <!-- Principal Quantum Number (n) -->
+              <div class="h-param-group">
+                <div class="h-param-header">
+                  <span class="h-param-label">Principal Quantum Number (\(n\)):</span>
+                  <span class="h-param-badge font-mono" id="disp-val-n">n = 3</span>
+                </div>
+                <div class="h-btn-cluster" id="cluster-n">
+                  <button class="h-pill-btn" data-val-n="1">n = 1 (K Shell)</button>
+                  <button class="h-pill-btn" data-val-n="2">n = 2 (L Shell)</button>
+                  <button class="h-pill-btn active" data-val-n="3">n = 3 (M Shell)</button>
+                  <button class="h-pill-btn" data-val-n="4">n = 4 (N Shell)</button>
+                  <button class="h-pill-btn" data-val-n="5">n = 5 (O Shell)</button>
+                  <button class="h-pill-btn" data-val-n="6">n = 6 (P Shell)</button>
+                  <button class="h-pill-btn" data-val-n="7">n = 7 (Q Shell)</button>
+                </div>
+              </div>
+
+              <!-- Azimuthal Quantum Number (l) -->
+              <div class="h-param-group">
+                <div class="h-param-header">
+                  <span class="h-param-label">Azimuthal / Angular Momentum (\(l\)):</span>
+                  <span class="h-param-badge font-mono" id="disp-val-l">l = 2 (d)</span>
+                </div>
+                <div class="h-btn-cluster" id="cluster-l">
+                  <!-- Generated dynamically via JS: l = 0 ... n-1 -->
+                </div>
+              </div>
+
+              <!-- Magnetic Quantum Number (m) -->
+              <div class="h-param-group">
+                <div class="h-param-header">
+                  <span class="h-param-label">Magnetic Quantum Number (\(m\)):</span>
+                  <span class="h-param-badge font-mono" id="disp-val-m">m = 1</span>
+                </div>
+                <div class="h-btn-cluster" id="cluster-m">
+                  <!-- Generated dynamically via JS: m = -l ... +l -->
+                </div>
+              </div>
+
+              <!-- Active State Callout -->
+              <div class="h-active-state-callout">
+                <span class="h-callout-kicker">Active Quantum State:</span>
+                <div class="h-callout-state">
+                  <strong class="font-mono gradient-cyan-text" id="h-active-state-txt">(n, l, m) = (3, 2, 1)</strong>
+                  <span class="h-subshell-tag" id="h-active-subshell-tag">3d Orbital</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Simulation & Rendering Parameters -->
+            <div class="h-card">
+              <div class="h-card-header">
+                <i data-lucide="gauge" class="icon-blue"></i>
+                <h3 class="h-card-title">Simulation & Display Controls</h3>
+              </div>
+
+              <div class="slider-field">
+                <div class="slider-info">
+                  <span>Probability Cloud Density:</span>
+                  <strong class="font-mono" id="lbl-cloud-density">6,000 points</strong>
+                </div>
+                <input type="range" id="slider-cloud-density" min="2000" max="10000" step="500" value="6000" class="quantum-slider">
+              </div>
+
+              <div class="slider-field" style="margin-top: 1rem;">
+                <div class="slider-info">
+                  <span>Phase & Spin Speed:</span>
+                  <strong class="font-mono" id="lbl-spin-speed">1.0&times;</strong>
+                </div>
+                <input type="range" id="slider-spin-speed" min="0" max="25" step="1" value="10" class="quantum-slider">
+              </div>
+
+              <!-- Colormap Selector -->
+              <div class="h-param-group" style="margin-top: 1.25rem;">
+                <span class="h-param-label">Scientific Colormap Palette:</span>
+                <div class="h-btn-cluster" id="cluster-colormap">
+                  <button class="h-pill-btn active" data-h-cmap="plasma">Inferno / Plasma</button>
+                  <button class="h-pill-btn" data-h-cmap="cyan">Electric Cyan-Blue</button>
+                  <button class="h-pill-btn" data-h-cmap="mono">Quantum Monochrome</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Dynamic Wavefunction & Nodal Inspector -->
+            <div class="h-card h-inspector-card">
+              <div class="h-card-header">
+                <i data-lucide="sparkles" class="icon-indigo"></i>
+                <h3 class="h-card-title">Mathematical Wavefunction Inspector</h3>
+              </div>
+
+              <!-- Mathematical Equation Box -->
+              <div class="h-math-container" id="h-math-formula">
+                $$\psi_{321}(r,\theta,\phi) = R_{32}(r) \cdot Y_2^1(\theta,\phi)$$
+              </div>
+
+              <!-- Quantitative Nodal & Energy Metrics -->
+              <div class="h-metrics-grid">
+                <div class="h-metric-cell">
+                  <span class="h-m-label">Energy Level (\(E_n\)):</span>
+                  <span class="h-m-val text-cyan font-mono" id="h-metric-energy">-1.51 eV</span>
+                </div>
+                <div class="h-metric-cell">
+                  <span class="h-m-label">Degeneracy (\(n^2\)):</span>
+                  <span class="h-m-val font-mono" id="h-metric-degen">9 states</span>
+                </div>
+                <div class="h-metric-cell">
+                  <span class="h-m-label">Radial Nodes (\(n - l - 1\)):</span>
+                  <span class="h-m-val font-mono text-orange" id="h-metric-rnodes">0</span>
+                </div>
+                <div class="h-metric-cell">
+                  <span class="h-m-label">Angular Nodes (\(l\)):</span>
+                  <span class="h-m-val font-mono text-purple" id="h-metric-anodes">2</span>
+                </div>
+                <div class="h-metric-cell">
+                  <span class="h-m-label">Total Nodal Surfaces (\(n - 1\)):</span>
+                  <span class="h-m-val font-mono" id="h-metric-tnodes">2</span>
+                </div>
+                <div class="h-metric-cell">
+                  <span class="h-m-label">Mean Orbital Radius (\(\langle r \rangle\)):</span>
+                  <span class="h-m-val font-mono" id="h-metric-radius">~9.0 a₀</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             INTERACTIVE HYDROGEN ORBITALS GALLERY GRID
+             =================================================================== -->
+        <div class="h-gallery-section" style="margin-top: 4rem;">
+          <div class="section-header-centered">
+            <span class="section-tag"><i data-lucide="grid"></i> Exact Analytical Solutions</span>
+            <h3 class="section-title">Hydrogen Orbitals <span class="gradient-cyan-text">Gallery</span></h3>
+            <p class="section-subtitle">
+              Visual reference grid of probability density plots \(|\psi|^2\) generated from analytical hydrogen wavefunctions. Click any card to instantly load that orbital state into the 3D/2D visualizer.
+            </p>
+          </div>
+
+          <div class="h-gallery-grid" id="h-gallery-grid">
+            <!-- 14 Cards populated with live 2D mathematically rendered canvas thumbnails -->
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             INTERACTIVE ENERGY LEVEL LADDER & SPECTRAL TRANSITIONS
+             =================================================================== -->
+        <div class="h-energy-section" style="margin-top: 4rem;">
+          <div class="section-header-centered">
+            <span class="section-tag"><i data-lucide="zap"></i> Rydberg & Bohr Quantum Jumps</span>
+            <h3 class="section-title">Energy Level Ladder & <span class="gradient-cyan-text">Spectral Photon Transitions</span></h3>
+            <p class="section-subtitle">
+              Bound electronic eigenstates are quantized according to \(E_n = -\frac{13.6\ \text{eV}}{n^2}\). Click any energy rung to trigger an atomic quantum jump and observe photon emission or absorption.
+            </p>
+          </div>
+
+          <div class="h-energy-workbench">
+            <!-- Interactive Vertical Ladder -->
+            <div class="h-ladder-card">
+              <div class="h-ladder-header">
+                <span>Energy Level Rungs (\(n = 1 \dots 7, \infty\))</span>
+                <span class="font-mono text-cyan">$$E_n = -\frac{13.6\ \text{eV}}{n^2}$$</span>
+              </div>
+
+              <div class="h-ladder-stage">
+                <!-- Rung Infinity -->
+                <div class="h-ladder-rung" data-ladder-n="inf">
+                  <div class="rung-line ionization-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = &infin;</span>
+                    <span class="rung-e font-mono">0.00 eV (Ionization Threshold)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 7 -->
+                <div class="h-ladder-rung" data-ladder-n="7">
+                  <div class="rung-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 7</span>
+                    <span class="rung-e font-mono">-0.28 eV (6th Excited State)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 6 -->
+                <div class="h-ladder-rung" data-ladder-n="6">
+                  <div class="rung-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 6</span>
+                    <span class="rung-e font-mono">-0.38 eV (5th Excited State)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 5 -->
+                <div class="h-ladder-rung" data-ladder-n="5">
+                  <div class="rung-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 5</span>
+                    <span class="rung-e font-mono">-0.54 eV (4th Excited State)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 4 -->
+                <div class="h-ladder-rung" data-ladder-n="4">
+                  <div class="rung-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 4</span>
+                    <span class="rung-e font-mono">-0.85 eV (3rd Excited State)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 3 -->
+                <div class="h-ladder-rung active" data-ladder-n="3">
+                  <div class="rung-line active"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 3</span>
+                    <span class="rung-e font-mono">-1.51 eV (2nd Excited State)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 2 -->
+                <div class="h-ladder-rung" data-ladder-n="2">
+                  <div class="rung-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 2</span>
+                    <span class="rung-e font-mono">-3.40 eV (1st Excited State)</span>
+                  </div>
+                </div>
+
+                <!-- Rung 1 -->
+                <div class="h-ladder-rung" data-ladder-n="1">
+                  <div class="rung-line ground-line"></div>
+                  <div class="rung-meta">
+                    <span class="rung-n font-mono">n = 1</span>
+                    <span class="rung-e font-mono">-13.60 eV (Ground State)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="h-ladder-hint">
+                <i data-lucide="mouse-pointer"></i>
+                <span>Click any rung above to trigger an atomic transition between shells.</span>
+              </div>
+            </div>
+
+            <!-- Transition Readout Card -->
+            <div class="h-transition-details-card">
+              <div class="h-card-header">
+                <i data-lucide="radio" class="icon-cyan"></i>
+                <h3 class="h-card-title">Spectral Photon Transition Analysis</h3>
+              </div>
+
+              <div class="h-trans-status-strip" id="h-trans-status-strip">
+                <span class="h-trans-badge">Selected Transition:</span>
+                <strong class="font-mono" id="h-trans-label">n = 3 &rarr; n = 2 (Balmer H-Alpha)</strong>
+              </div>
+
+              <div class="h-trans-metrics-list">
+                <div class="spec-row">
+                  <span class="spec-k">Transition Type:</span>
+                  <span class="spec-v" id="h-trans-type" style="color: #10B981;">Spontaneous Photon Emission</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-k">Energy Gap (\(\Delta E\)):</span>
+                  <span class="spec-v font-mono text-cyan" id="h-trans-delta-e">1.889 eV (3.027 &times; 10⁻¹⁹ J)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-k">Photon Wavelength (\(\lambda\)):</span>
+                  <span class="spec-v font-mono text-orange" id="h-trans-lambda">656.3 nm (Visible Red Light)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-k">Spectral Series:</span>
+                  <span class="spec-v" id="h-trans-series">Balmer Series (Final n = 2)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-k">Associated Frequency (\(\nu\)):</span>
+                  <span class="spec-v font-mono" id="h-trans-freq">4.57 &times; 10¹⁴ Hz</span>
+                </div>
+              </div>
+
+              <!-- Optical Spectrum Swatch Preview -->
+              <div class="h-spectrum-swatch-box">
+                <span class="h-swatch-title">Optical Emission Line Preview:</span>
+                <div class="h-swatch-bar">
+                  <div class="h-swatch-indicator" id="h-swatch-indicator" style="background-color: #ef4444; box-shadow: 0 0 15px #ef4444;"></div>
+                </div>
+                <span class="h-swatch-desc" id="h-swatch-desc">Red spectral emission line (Hydrogen Alpha \(H_\alpha\))</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             SCIENTIFIC CONCEPTUAL DEEP-DIVE CARDS (6 CARDS)
+             =================================================================== -->
+        <div class="h-science-grid" style="margin-top: 4rem;">
+          <!-- Card 1 -->
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="atom" class="icon-cyan"></i>
+              <h4 class="glass-card-title">1. The Hydrogen Atom Problem</h4>
+            </div>
+            <p class="glass-card-text">
+              Hydrogen consists of one proton of mass \(M\) and one electron of mass \(m_e\) bound by Coulomb attraction. It represents the singular realistic atomic system whose non-relativistic time-independent Schrödinger equation possesses an exact analytical closed-form solution:
+            </p>
+            <div class="math-box">
+              $$\left[-\frac{\hbar^2}{2\mu}\nabla^2 - \frac{e^2}{4\pi\epsilon_0 r}\right] \psi(r,\theta,\phi) = E \psi(r,\theta,\phi)$$
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="cloud" class="icon-blue"></i>
+              <h4 class="glass-card-title">2. Probability Density Clouds</h4>
+            </div>
+            <p class="glass-card-text">
+              Heisenberg's Uncertainty Principle strictly forbids well-defined planetary orbital trajectories \(\mathbf{r}(t)\). Instead, Max Born's statistical interpretation dictates that \(|\psi(r,\theta,\phi)|^2 dV\) yields the probability of detecting the electron within volume element \(dV\):
+            </p>
+            <div class="math-box">
+              $$P(V) = \iiint_V |\psi(\mathbf{r})|^2 d^3\mathbf{r}, \quad \iiint_{\mathbb{R}^3} |\psi|^2 d^3\mathbf{r} = 1$$
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="split" class="icon-indigo"></i>
+              <h4 class="glass-card-title">3. Separation of Variables</h4>
+            </div>
+            <p class="glass-card-text">
+              Due to spherical central potential symmetry \(V(r)\), the 3D Laplacian separates into radial and angular spherical harmonic components:
+            </p>
+            <div class="math-box">
+              $$\psi_{nlm}(r,\theta,\phi) = R_{nl}(r) \cdot Y_l^m(\theta,\phi)$$
+            </div>
+            <p class="glass-card-text font-sm">
+              The radial wavefunctions \(R_{nl}(r)\) are expressed in terms of Associated Laguerre polynomials \(L_{n-l-1}^{2l+1}\), and angular factors \(Y_l^m\) in Associated Legendre polynomials \(P_l^m(\cos\theta)\).
+            </p>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="shield-alert" class="icon-cyan"></i>
+              <h4 class="glass-card-title">4. Nodal Surfaces & Topology</h4>
+            </div>
+            <p class="glass-card-text">
+              Nodal surfaces are geometric regions where the electron wavefunction vanishes identically (\(\psi = 0\)), producing zero detection probability:
+            </p>
+            <div class="math-box">
+              $$N_{\text{radial}} = n - l - 1, \quad N_{\text{angular}} = l, \quad N_{\text{total}} = n - 1$$
+            </div>
+            <p class="glass-card-text font-sm">
+              For example, the \(3d\) orbital has \(n=3, l=2 \implies 0\) radial nodes and \(2\) angular nodal cones/planes.
+            </p>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="layers" class="icon-blue"></i>
+              <h4 class="glass-card-title">5. Quantum Numbers & Symmetry</h4>
+            </div>
+            <p class="glass-card-text">
+              Three spatial integers govern the state: Principal \(n \ge 1\) specifies energy; Azimuthal \(0 \le l \le n-1\) specifies orbital angular momentum \(L = \sqrt{l(l+1)}\hbar\); and Magnetic \(-l \le m \le +l\) determines spatial projection \(L_z = m\hbar\). Spin \(m_s = \pm 1/2\) provides intrinsic magnetic moment.
+            </p>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="sparkles" class="icon-indigo"></i>
+              <h4 class="glass-card-title">6. Bound Energy & Spectroscopy</h4>
+            </div>
+            <p class="glass-card-text">
+              In non-relativistic quantum mechanics, the hydrogen bound state energies depend exclusively upon principal quantum number \(n\), creating \(n^2\)-fold degeneracy (ignoring spin):
+            </p>
+            <div class="math-box">
+              $$E_n = -\frac{\mu e^4}{32 \pi^2 \epsilon_0^2 \hbar^2} \frac{1}{n^2} = -\frac{13.606\ \text{eV}}{n^2}$$
+            </div>
+            <p class="glass-card-text font-sm">
+              Electric dipole selection rules \(\Delta l = \pm 1\) and \(\Delta m = 0, \pm 1\) regulate allowed radiative transitions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 4: QUANTUM CONCEPTS (Spatial Geometry & Foundational Numbers)
+         ===================================================================== -->
+    <div id="quantum-concepts" class="nav-target-anchor"></div>
+    <section id="quantum-concepts-sec" class="content-section">
+      <div class="section-container">
+        <div class="section-header-centered">
+          <span class="section-tag"><i data-lucide="layers"></i> Spatial Geometry of the Atom</span>
+          <h2 class="section-title">Quantum <span class="gradient-cyan-text">Numbers & Principles</span></h2>
+          <p class="section-subtitle">
+            Four fundamental quantum numbers uniquely specify the discrete energetic state and spatial geometric probability distribution of every electron.
+          </p>
+        </div>
+
+        <!-- 4 Quantum Numbers Strip -->
+        <div class="grid-4-cards">
+          <div class="q-number-card">
+            <div class="q-number-badge">n</div>
+            <h3 class="q-title">Principal Number</h3>
+            <span class="q-sub">Electron Shell & Energy</span>
+            <p class="q-desc">Determines the main energy level and radial size of the orbital: \(n = 1, 2, 3, 4 \dots\)</p>
+          </div>
+
+          <div class="q-number-card">
+            <div class="q-number-badge">l</div>
+            <h3 class="q-title">Azimuthal (Angular)</h3>
+            <span class="q-sub">Orbital Shape & Symmetry</span>
+            <p class="q-desc">Defines angular momentum: \(l = 0\ (s)\), \(1\ (p)\), \(2\ (d)\), \(3\ (f)\), where \(0 \le l \le n - 1\).</p>
+          </div>
+
+          <div class="q-number-card">
+            <div class="q-number-badge">m_l</div>
+            <h3 class="q-title">Magnetic Number</h3>
+            <span class="q-sub">Spatial Orientation</span>
+            <p class="q-desc">Specifies the orbital's orientation in 3D space: \(-l \le m_l \le +l\) (\(2l+1\) states).</p>
+          </div>
+
+          <div class="q-number-card">
+            <div class="q-number-badge">m_s</div>
+            <h3 class="q-title">Electron Spin</h3>
+            <span class="q-sub">Intrinsic Angular Momentum</span>
+            <p class="q-desc">Intrinsic two-valued quantum spin projection: \(m_s = +\frac{1}{2}\ (\uparrow)\) or \(-\frac{1}{2}\ (\downarrow)\).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 5: WAVE-PARTICLE DUALITY (Animated Double-Slit Experiment)
+         ===================================================================== -->
+    <div id="experiments" class="nav-target-anchor"></div>
+    <section id="duality" class="content-section alternate-bg">
+      <div class="section-container">
+        <div class="section-header-centered">
+          <span class="section-tag"><i data-lucide="waves"></i> The Quantum Measurement Paradox</span>
+          <h2 class="section-title">Wave-Particle <span class="gradient-cyan-text">Duality</span></h2>
+          <p class="section-subtitle">
+            Subatomic entities propagate through both slits simultaneously as probability waves, yet collapse into localized particle hits upon detection.
+          </p>
+        </div>
+
+        <div class="double-slit-sandbox-card">
+          <!-- Simulation Toolbar -->
+          <div class="sim-header-toolbar">
+            <div class="mode-selector-wrap">
+              <span class="toolbar-label">Simulation Mode:</span>
+              <div class="mode-btn-group">
+                <button class="sim-mode-btn active" data-ds-mode="wave">
+                  <i data-lucide="waves"></i>
+                  <span>1. Wave Interference</span>
+                </button>
+                <button class="sim-mode-btn" data-ds-mode="particles">
+                  <i data-lucide="crosshair"></i>
+                  <span>2. Single Particle Hits</span>
+                </button>
+                <button class="sim-mode-btn" data-ds-mode="observer">
+                  <i data-lucide="eye"></i>
+                  <span>3. Detector Active (Collapse)</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="sim-stats-wrap">
+              <span class="hits-counter" id="ds-hits-count">Accumulated: 0 hits</span>
+              <button id="btn-reset-slit" class="btn-icon-sm" title="Clear Screen & Hits">
+                <i data-lucide="rotate-ccw"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Canvas Simulation Stage -->
+          <div class="sim-canvas-viewport">
+            <canvas id="double-slit-canvas" height="260"></canvas>
+          </div>
+
+          <!-- Parameter Sliders -->
+          <div class="sim-sliders-grid">
+            <div class="slider-field">
+              <div class="slider-info">
+                <span>De Broglie Wavelength (\(\lambda\)):</span>
+                <strong class="font-mono" id="lbl-ds-lambda">35 nm</strong>
+              </div>
+              <input type="range" id="slider-ds-lambda" min="15" max="65" value="35" class="quantum-slider">
+            </div>
+
+            <div class="slider-field">
+              <div class="slider-info">
+                <span>Slit Separation Distance (\(d\)):</span>
+                <strong class="font-mono" id="lbl-ds-dist">45 &mu;m</strong>
+              </div>
+              <input type="range" id="slider-ds-dist" min="20" max="80" value="45" class="quantum-slider">
+            </div>
+          </div>
+
+          <!-- Educational Scientific Explanation Box -->
+          <div class="sim-insight-box" id="ds-insight-text">
+            <strong>The Central Mystery of Quantum Mechanics:</strong> In Mode 1, continuous phase interference creates alternating constructive bright fringes and destructive dark fringes. In Mode 2, even when particles are fired one by one with days between shots, each particle passes through both slits in superposition, building up the interference fringes over time. In Mode 3, placing a detector destroys phase coherence, collapsing the wavefunction into two classical bands!
+          </div>
+        </div>
+
+        <!-- De Broglie Matter Wavelength Solver -->
+        <div class="cards-grid-2" style="margin-top: 2.5rem;">
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="scale" class="icon-cyan"></i>
+              <h3 class="glass-card-title">De Broglie Wavelength Equation</h3>
+            </div>
+            <p class="glass-card-text">
+              In 1924, Louis de Broglie hypothesized that any moving particle with momentum \(p = mv\) possesses an intrinsic matter wavelength:
+            </p>
+            <div class="math-box">
+              $$\lambda = \frac{h}{p} = \frac{h}{m \cdot v}$$
+            </div>
+            <p class="glass-card-text font-sm">
+              For a 0.15 kg baseball traveling at 40 m/s, \(\lambda \sim 10^{-34}\ \text{m}\), far smaller than any atomic nucleus, making wave behavior unobservable. For electrons (\(m_e \approx 9.1 \times 10^{-31}\ \text{kg}\)), \(\lambda\) matches crystal lattice spacing, enabling electron microscopes.
+            </p>
+          </div>
+
+          <div class="glass-card">
+            <div class="glass-card-header">
+              <i data-lucide="cpu" class="icon-blue"></i>
+              <h3 class="glass-card-title">Interactive Matter-Wave Solver</h3>
+            </div>
+            <div class="debroglie-calc-grid">
+              <div class="slider-field">
+                <label for="db-mass-select" class="field-label font-sm">Select Subatomic Particle:</label>
+                <select id="db-mass-select" class="sci-select">
+                  <option value="9.1093837e-31" selected>Electron (m_e = 9.109 &times; 10⁻³¹ kg)</option>
+                  <option value="1.6726219e-27">Proton (m_p = 1.673 &times; 10⁻²⁷ kg)</option>
+                  <option value="1.6749274e-27">Neutron (m_n = 1.675 &times; 10⁻²⁷ kg)</option>
+                </select>
+              </div>
+
+              <div class="slider-field">
+                <label for="db-vel-input" class="field-label font-sm">Velocity (\(v\) in m/s):</label>
+                <input type="number" id="db-vel-input" value="1000000" step="100000" class="sci-input">
+              </div>
+
+              <div class="db-result-box">
+                <span class="db-res-label">Resulting De Broglie Wavelength (\(\lambda\)):</span>
+                <div class="db-res-val font-mono" id="db-calc-output">0.727 nm</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SECTION 6: SCHRÖDINGER EQUATION (Clean presentation + visual explanation)
+         ===================================================================== -->
+    <section id="schrodinger" class="content-section">
+      <div class="section-container">
+        <div class="section-header-centered">
+          <span class="section-tag"><i data-lucide="activity"></i> The Fundamental Law of Quantum Motion</span>
+          <h2 class="section-title">The <span class="gradient-cyan-text">Schrödinger Equation</span></h2>
+          <p class="section-subtitle">
+            Formulated in 1926 by Erwin Schrödinger, this partial differential equation governs the non-relativistic deterministic time evolution of a quantum wavefunction.
+          </p>
+        </div>
+
+        <!-- Master Equation Showcase Card with Interactive Term Inspector -->
+        <div class="equation-hero-card">
+          <div class="eq-hero-badge">Time-Dependent Formulation (TDSE)</div>
+          
+          <div class="equation-main-display">
+            $$i\hbar \frac{\partial}{\partial t}\Psi(\vec{r}, t) = \hat{H}\Psi(\vec{r}, t) = \left[ -\frac{\hbar^2}{2m}\nabla^2 + V(\vec{r}, t) \right] \Psi(\vec{r}, t)$$
+          </div>
+
+          <!-- Interactive Anatomical Terms Grid (Click to highlight & learn) -->
+          <div class="terms-anatomical-grid">
+            <div class="eq-term-card" data-term="energy">
+              <div class="term-eq font-mono">$$i\hbar \frac{\partial}{\partial t}$$</div>
+              <h3 class="term-name">Energy Operator</h3>
+              <p class="term-desc">Governs how the quantum phase advances forward in time: \(\hat{E} = i\hbar \frac{\partial}{\partial t}\).</p>
+            </div>
+
+            <div class="eq-term-card" data-term="wavefunction">
+              <div class="term-eq font-mono">$$\Psi(\vec{r}, t)$$</div>
+              <h3 class="term-name">State Wavefunction</h3>
+              <p class="term-desc">Complex amplitude in Hilbert space containing all physical information about the particle.</p>
+            </div>
+
+            <div class="eq-term-card" data-term="kinetic">
+              <div class="term-eq font-mono">$$-\frac{\hbar^2}{2m}\nabla^2$$</div>
+              <h3 class="term-name">Kinetic Energy (\(\hat{T}\))</h3>
+              <p class="term-desc">Derived from momentum squared \(\frac{\hat{p}^2}{2m}\) with spatial Laplacian curvature \(\nabla^2\).</p>
+            </div>
+
+            <div class="eq-term-card" data-term="potential">
+              <div class="term-eq font-mono">$$V(\vec{r}, t)$$</div>
+              <h3 class="term-name">Potential Field (\(\hat{V}\))</h3>
+              <p class="term-desc">External potential barrier, electrostatic Coulomb attraction, or harmonic oscillator well.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1D Particle in an Infinite Potential Well Simulator -->
+        <div class="well-simulator-card">
+          <div class="well-sim-header">
+            <div>
+              <span class="tool-kicker">Canonical Quantum Boundary Value Problem</span>
+              <h3 class="tool-heading">Particle in a 1D Box (Infinite Potential Well)</h3>
+              <p class="tool-sub">Explore stationary wave eigenfunctions \(\psi_n(x)\) and probability density \(|\psi_n(x)|^2\) standing waves.</p>
+            </div>
+
+            <div class="well-level-actions">
+              <span class="level-label">Energy State (\(n\)):</span>
+              <div class="level-pill-group">
+                <button class="level-pill active" data-well-mode="1">n = 1</button>
+                <button class="level-pill" data-well-mode="2">n = 2</button>
+                <button class="level-pill" data-well-mode="3">n = 3</button>
+                <button class="level-pill" data-well-mode="4">n = 4</button>
+                <button class="level-pill" data-well-mode="5">n = 5</button>
+              </div>
+              <button id="btn-toggle-well-type" class="btn-ghost-sm">
+                <i data-lucide="layers"></i>
+                <span id="txt-well-type">Mode: Probability Density |ψ|²</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="sim-canvas-viewport" style="height: 280px;">
+            <canvas id="schrodinger-well-canvas"></canvas>
+          </div>
+
+          <div class="well-metric-footer">
+            <div class="metric-item">
+              <span class="m-title">Eigenvalue Formula:</span>
+              <span class="m-formula font-mono">$$E_n = \frac{n^2 \pi^2 \hbar^2}{2mL^2}$$</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-title">Current State Energy:</span>
+              <span class="m-val-highlight font-mono" id="disp-well-ev">E₁ = 3.76 eV (Ground State)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ACADEMIC FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top-grid">
+        <div class="footer-col-brand">
+          <div class="brand-link">
+            <div class="brand-orb"><i data-lucide="atom"></i></div>
+            <div class="brand-text">
+              <span class="brand-title">QUANTUM<span class="brand-highlight">.EDU</span></span>
+              <span class="brand-sub">Introduction to Quantum Mechanics</span>
+            </div>
+          </div>
+          <p class="footer-desc">
+            An interactive, scientifically rigorous learning platform developed for the Faculty of Science, Department of Physics. Engineered for visual intuition, 3D atomic orbitals, and analytical wave mechanics.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Platform Modules</h4>
+          <ul class="footer-nav">
+            <li><a href="#home">1. Home</a></li>
+            <li><a href="#introduction">2. Introduction</a></li>
+            <li><a href="#hydrogen-explorer">3. Hydrogen Explorer</a></li>
+            <li><a href="#quantum-concepts">4. Quantum Concepts</a></li>
+            <li><a href="#experiments">5. Experiments</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Interactive Solvers</h4>
+          <ul class="footer-nav">
+            <li><a href="#hydrogen-explorer">3D Hydrogen Probability Cloud</a></li>
+            <li><a href="#hydrogen-explorer">2D Wavefunction Heatmap Slice</a></li>
+            <li><a href="#hydrogen-explorer">Orbital Gallery (1s &ndash; 4d)</a></li>
+            <li><a href="#duality">Double-Slit Wave Sandbox</a></li>
+            <li><a href="#schrodinger">1D Quantum Box Eigenstates</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-heading">Academic Record</h4>
+          <ul class="footer-meta-list">
+            <li><strong>Student:</strong> Mohamed Alsaid Elhefnawy</li>
+            <li><strong>ID:</strong> <span class="font-mono">225114279</span></li>
+            <li><strong>Supervisor:</strong> Dr. Hamdi M. Abdelhamid</li>
+            <li><strong>Department:</strong> Department of Physics</li>
+            <li><strong>Faculty:</strong> Faculty of Science</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          &copy; 2026 Faculty of Science &bull; Department of Physics &bull; Academic University Coursework Submission
+        </div>
+        <div class="footer-actions">
+          <span>Ref: PHY-QUAN-2026</span>
+          <a href="#home" class="scroll-top-link">Return to Top &uarr;</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- OFFICIAL PROJECT DOSSIER MODAL -->
+  <div id="dossier-modal" class="modal-overlay">
+    <div class="dossier-dialog">
+      <div class="dossier-dialog-header">
+        <div class="dossier-icon-seal"><i data-lucide="shield-check"></i></div>
+        <div>
+          <span class="dossier-sub-kicker">Faculty of Science &bull; Department of Physics</span>
+          <h3 class="dossier-heading">Official Project Submission Dossier</h3>
+        </div>
+        <button id="btn-close-dossier" class="btn-modal-close" aria-label="Close modal">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="dossier-dialog-body">
+        <div class="dossier-table">
+          <div class="d-row">
+            <span class="d-label">Coursework Title:</span>
+            <span class="d-val highlight-cyan">Introduction to Quantum Mechanics</span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">Student Researcher:</span>
+            <span class="d-val"><strong>Mohamed Alsaid Elhefnawy</strong></span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">University ID Number:</span>
+            <span class="d-val font-mono"><strong>225114279</strong></span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">Course Supervisor:</span>
+            <span class="d-val font-semibold">Dr. Hamdi M. Abdelhamid</span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">Academic Department:</span>
+            <span class="d-val">Department of Physics</span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">Faculty:</span>
+            <span class="d-val">Faculty of Science</span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">Academic Term:</span>
+            <span class="d-val font-mono">2026 Academic Session</span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">3D Quantum Engines:</span>
+            <span class="d-val">Hydrogen Atom, 1s/2s/2p/3d Orbitals, Double-Slit, 1D Box</span>
+          </div>
+          <div class="d-row">
+            <span class="d-label">Accreditation:</span>
+            <span class="d-val status-ok">
+              <i data-lucide="check-circle-2"></i> Verified by Department Chair
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dossier-dialog-footer">
+        <button id="btn-print-modal" class="btn-primary-glow">
+          <i data-lucide="printer"></i>
+          <span>Print / Save as PDF</span>
+        </button>
+        <button id="btn-dismiss-modal" class="btn-ghost-sm">
+          <span>Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SCRIPT -->
+  <script src="quantum-3d.js"></script>
+  <script src="quantum-sims.js"></script>
+  <script src="hydrogen-explorer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
